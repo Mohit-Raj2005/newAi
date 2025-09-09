@@ -13,7 +13,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      
+      min-height: 100vh;
     }
     .container {
       width: 90%;
@@ -23,7 +23,6 @@
       border-radius: 20px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
       text-align: center;
-      
     }
     h1 {
       font-size: 2rem;
@@ -55,6 +54,10 @@
     button:hover {
       background: #ff4d6d;
     }
+    button:disabled {
+      background: #666;
+      cursor: not-allowed;
+    }
     .response-box {
       margin-top: 20px;
       text-align: left;
@@ -63,6 +66,17 @@
       border-radius: 10px;
       min-height: 50px;
       max-height: fit-content;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .loading {
+      display: inline-block;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
     }
   </style>
 </head>
@@ -72,9 +86,9 @@
     <p>Ask any question and get intelligent answers by DCoder...Your AI Buddy...<br>
     Developed by <i>Mohit</i></p>
 
-    <input type="text" id="userQuestion" placeholder="Type your question here...">
+    <input type="text" id="userQuestion" placeholder="Type your question here..." onkeypress="handleEnter(event)">
     <br>
-    <button onclick="askGemini()">Ask DCoder</button>
+    <button id="askButton" onclick="askGemini()">Ask DCoder</button>
 
     <div class="response-box" id="response">
       <em>Your answer will appear here...</em>
@@ -82,22 +96,53 @@
   </div>
 
   <script>
-    async function askGemini() {
-      const question = document.getElementById("userQuestion").value;
-      const responseBox = document.getElementById("response");
-      responseBox.innerHTML = "<em>Thinking...</em>";
+    // Get the current domain for API calls
+    const API_BASE = window.location.origin;
+    
+    function handleEnter(event) {
+      if (event.key === 'Enter') {
+        askGemini();
+      }
+    }
 
-      // Send to your backend (Flask/FastAPI will forward to Gemini API)
+    async function askGemini() {
+      const question = document.getElementById("userQuestion").value.trim();
+      const responseBox = document.getElementById("response");
+      const askButton = document.getElementById("askButton");
+      
+      if (!question) {
+        responseBox.innerHTML = "<span style='color:orange;'>Please enter a question first.</span>";
+        return;
+      }
+
+      // Show loading state
+      responseBox.innerHTML = "<span class='loading'><em>Thinking...</em></span>";
+      askButton.disabled = true;
+      askButton.textContent = "Processing...";
+
       try {
-        const res = await fetch("http://127.0.0.1:5000/ask", { 
+        const res = await fetch(`${API_BASE}/ask`, { 
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({ question: question })
         });
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
         const data = await res.json();
-        responseBox.innerHTML = data.answer;
+        responseBox.innerHTML = data.answer || "No response received.";
+        
       } catch (error) {
-        responseBox.innerHTML = "<span style='color:red;'>Error connecting to server.</span>";
+        console.error('Error:', error);
+        responseBox.innerHTML = "<span style='color:red;'>Error connecting to server. Please try again later.</span>";
+      } finally {
+        // Reset button state
+        askButton.disabled = false;
+        askButton.textContent = "Ask DCoder";
       }
     }
   </script>
