@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DCoder AI Buddy</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1d3557, #457b9d);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+    }
+    .container {
+      width: 90%;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      text-align: center;
+      
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+    input {
+      width: 80%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      margin-bottom: 15px;
+      font-size: 1rem;
+    }
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 10px;
+      background: #e63946;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #ff4d6d;
+    }
+    .response-box {
+      margin-top: 20px;
+      text-align: left;
+      background: rgba(0,0,0,0.2);
+      padding: 15px;
+      border-radius: 10px;
+      min-height: 50px;
+      max-height: fit-content;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>✨ DCoder Your AI Buddy</h1>
+    <p>Ask any question and get intelligent answers by DCoder...Your AI Buddy...<br>
+    Developed by <i>Mohit</i></p>
+
+    <input type="text" id="userQuestion" placeholder="Type your question here...">
+    <br>
+    <button onclick="askGemini()">Ask DCoder</button>
+
+    <div class="response-box" id="response">
+      <em>Your answer will appear here...</em>
+    </div>
+  </div>
+
+  <script>
+    async function askGemini() {
+      const question = document.getElementById("userQuestion").value;
+      const responseBox = document.getElementById("response");
+      responseBox.innerHTML = "<em>Thinking...</em>";
+
+      // Send to your backend (Flask/FastAPI will forward to Gemini API)
+      try {
+        const res = await fetch("http://127.0.0.1:5000/ask", { 
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: question })
+        });
+        const data = await res.json();
+        responseBox.innerHTML = data.answer;
+      } catch (error) {
+        responseBox.innerHTML = "<span style='color:red;'>Error connecting to server.</span>";
+      }
+    }
+  </script>
+</body>
+</html>
