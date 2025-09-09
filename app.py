@@ -55,4 +55,6 @@ if __name__ == "__main__":
 
 
 
-print("hello world")
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({"message": "Gemini AI Backend is running! Use POST /ask"})
