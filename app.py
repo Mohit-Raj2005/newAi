@@ -52,3 +52,7 @@ def ask_gemini():
 if __name__ == "__main__":
     # For local dev
     app.run(host="127.0.0.1", port=5000, debug=True)
+
+
+
+print("hello world")
