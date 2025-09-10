@@ -7,67 +7,98 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #1d3557, #457b9d);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #fff;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
     }
     .container {
-      width: 90%;
-      max-width: 600px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 30px;
+      width: 100%;
+      max-width: 700px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      padding: 40px;
       border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
       text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      margin-bottom: 30px;
     }
     h1 {
-      font-size: 2rem;
-      margin-bottom: 10px;
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      background: linear-gradient(45deg, #fff, #f0f0f0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    p {
-      font-size: 1rem;
-      margin-bottom: 20px;
+    .subtitle {
+      font-size: 1.1rem;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+    .input-container {
+      margin-bottom: 25px;
+      position: relative;
     }
     input {
-      width: 80%;
-      padding: 12px;
-      border-radius: 10px;
+      width: 100%;
+      padding: 15px 20px;
+      border-radius: 15px;
       border: none;
       outline: none;
-      margin-bottom: 15px;
       font-size: 1rem;
+      background: rgba(255, 255, 255, 0.9);
+      color: #333;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    input:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
     }
     button {
-      padding: 12px 20px;
+      padding: 15px 30px;
       border: none;
-      border-radius: 10px;
-      background: #e63946;
+      border-radius: 15px;
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
       color: #fff;
-      font-size: 1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
       cursor: pointer;
-      transition: 0.3s;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      min-width: 150px;
     }
-    button:hover {
-      background: #ff4d6d;
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     }
     button:disabled {
-      background: #666;
+      background: linear-gradient(45deg, #95a5a6, #7f8c8d);
       cursor: not-allowed;
+      transform: none;
     }
     .response-box {
-      margin-top: 20px;
+      margin-top: 30px;
       text-align: left;
-      background: rgba(0,0,0,0.2);
-      padding: 15px;
-      border-radius: 10px;
-      min-height: 50px;
-      max-height: fit-content;
+      background: rgba(0,0,0,0.3);
+      padding: 20px;
+      border-radius: 15px;
+      min-height: 60px;
+      max-height: 400px;
+      overflow-y: auto;
       white-space: pre-wrap;
       word-wrap: break-word;
+      line-height: 1.6;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .loading {
       display: inline-block;
@@ -78,29 +109,236 @@
       50% { opacity: 0.5; }
       100% { opacity: 1; }
     }
+    .status-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 8px;
+    }
+    .status-online { background-color: #2ecc71; }
+    .status-offline { background-color: #e74c3c; }
+    .footer-status {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    /* Footer Styles */
+    .main-footer {
+      width: 100%;
+      max-width: 1200px;
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(15px);
+      border-radius: 20px 20px 0 0;
+      padding: 40px 30px 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: none;
+      margin-top: auto;
+    }
+    
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      text-align: left;
+    }
+    
+    .footer-section h3 {
+      color: #fff;
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      font-weight: 600;
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .footer-section p, .footer-section ul {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+    
+    .footer-section ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .footer-section ul li {
+      margin-bottom: 8px;
+    }
+    
+    .footer-section a {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .footer-section a:hover {
+      color: #ff6b6b;
+      transform: translateX(3px);
+    }
+    
+    .contact-icon {
+      width: 16px;
+      height: 16px;
+      opacity: 0.8;
+    }
+    
+    .footer-bottom {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 20px;
+        margin-bottom: 20px;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .main-footer {
+        padding: 30px 20px 15px;
+        border-radius: 15px 15px 0 0;
+      }
+      
+      .footer-content {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        text-align: center;
+      }
+      
+      .footer-section h3 {
+        font-size: 1.1rem;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>✨ DCoder Your AI Buddy</h1>
-    <p>Ask any question and get intelligent answers by DCoder...Your AI Buddy...<br>
-    Developed by <i>Mohit</i></p>
+    <h1>✨ DCoder AI Buddy</h1>
+    <p class="subtitle">
+      <span class="status-indicator" id="statusIndicator"></span>
+      Ask any question and get intelligent answers<br>
+      <em>Developed by Mohit</em>
+    </p>
 
-    <input type="text" id="userQuestion" placeholder="Type your question here..." onkeypress="handleEnter(event)">
-    <br>
+    <div class="input-container">
+      <input type="text" id="userQuestion" placeholder="Type your question here..." onkeypress="handleEnter(event)">
+    </div>
+    
     <button id="askButton" onclick="askGemini()">Ask DCoder</button>
 
     <div class="response-box" id="response">
       <em>Your answer will appear here...</em>
     </div>
+
+    <div class="footer-status">
+      <small>Status: <span id="connectionStatus">Checking connection...</span></small>
+    </div>
   </div>
 
+  <footer class="main-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>About</h3>
+        <p>DCoder AI Buddy is an intelligent assistant designed to provide instant answers to your questions. Powered by advanced AI technology, it helps users get accurate information quickly and efficiently.</p>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Services</h3>
+        <ul>
+          <li>• AI-Powered Q&A</li>
+          <li>• Instant Responses</li>
+          <li>• 24/7 Availability</li>
+          <li>• Multi-topic Support</li>
+          <li>• User-Friendly Interface</li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3>Contact</h3>
+        <ul>
+          <li>
+            <a href="mailto:mohitraj854334@gmail.com">
+              <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+              </svg>
+              mohitraj854334@gmail.com
+            </a>
+          </li>
+          <li>
+            <a href="https://www.instagram.com/mohit_raj_s" target="_blank" rel="noopener noreferrer">
+              <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+              </svg>
+              @mohit_raj_s
+            </a>
+          </li>
+          <li>
+            <a href="https://linktr.ee/MohitRaj2005" target="_blank" rel="noopener noreferrer">
+              <svg class="contact-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M13.511 5.853l4.633-4.633c.306-.306.306-.801 0-1.106-.306-.306-.801-.306-1.106 0L12 5.151 6.962.114c-.306-.306-.801-.306-1.106 0-.306.306-.306.801 0 1.106l4.633 4.633-4.633 4.633c-.306.306-.306.801 0 1.106.153.153.353.229.553.229.2 0 .4-.076.553-.229L12 6.959l5.038 5.037c.153.153.353.229.553.229.2 0 .4-.076.553-.229.306-.306.306-.801 0-1.106L13.511 5.853z"/>
+                <path d="M12 13.408l-4.695 4.695c-.306.306-.306.801 0 1.106.153.153.353.229.553.229.2 0 .4-.076.553-.229L12 15.621l3.589 3.588c.153.153.353.229.553.229.2 0 .4-.076.553-.229.306-.306.306-.801 0-1.106L12 13.408z"/>
+              </svg>
+              Linktree Profile
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2024 DCoder AI Buddy. Developed with ❤️ by Mohit. All rights reserved.</p>
+    </div>
+  </footer>
+
   <script>
-    // Get the current domain for API calls
-    const API_BASE = window.location.origin;
+    // Configuration - Update this with your backend URL
+    const API_BASE = 'https://dcoder-backend-acka.onrender.com'; // Replace with your backend URL
+    
+    // Check backend status on load
+    window.addEventListener('load', checkBackendStatus);
+    
+    async function checkBackendStatus() {
+      const statusIndicator = document.getElementById('statusIndicator');
+      const connectionStatus = document.getElementById('connectionStatus');
+      
+      try {
+        const response = await fetch(`${API_BASE}/health`, { 
+          method: 'GET',
+          timeout: 5000 
+        });
+        
+        if (response.ok) {
+          statusIndicator.className = 'status-indicator status-online';
+          connectionStatus.textContent = 'Connected to backend';
+        } else {
+          throw new Error('Backend not responding');
+        }
+      } catch (error) {
+        statusIndicator.className = 'status-indicator status-offline';
+        connectionStatus.textContent = 'Backend offline - Please try again later';
+      }
+    }
     
     function handleEnter(event) {
-      if (event.key === 'Enter') {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
         askGemini();
       }
     }
@@ -111,12 +349,12 @@
       const askButton = document.getElementById("askButton");
       
       if (!question) {
-        responseBox.innerHTML = "<span style='color:orange;'>Please enter a question first.</span>";
+        responseBox.innerHTML = "<span style='color:#ffa726;'>Please enter a question first.</span>";
         return;
       }
 
       // Show loading state
-      responseBox.innerHTML = "<span class='loading'><em>Thinking...</em></span>";
+      responseBox.innerHTML = "<span class='loading'><em>🤔 Thinking...</em></span>";
       askButton.disabled = true;
       askButton.textContent = "Processing...";
 
@@ -136,15 +374,26 @@
         const data = await res.json();
         responseBox.innerHTML = data.answer || "No response received.";
         
+        // Clear input after successful response
+        document.getElementById("userQuestion").value = '';
+        
       } catch (error) {
         console.error('Error:', error);
-        responseBox.innerHTML = "<span style='color:red;'>Error connecting to server. Please try again later.</span>";
+        responseBox.innerHTML = `
+          <span style='color:#ff7979;'>
+            ⚠ Error connecting to backend server.<br>
+            Please make sure the backend is running and try again.<br>
+            <small>Error: ${error.message}</small>
+          </span>`;
       } finally {
         // Reset button state
         askButton.disabled = false;
         askButton.textContent = "Ask DCoder";
       }
     }
+
+    // Auto-focus on input
+    document.getElementById('userQuestion').focus();
   </script>
 </body>
 </html>
