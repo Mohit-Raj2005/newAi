@@ -20,6 +20,10 @@ def index():
     """Serve the main HTML page"""
     return render_template('index.html')
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "healthy"}), 200
+
 @app.route('/ask', methods=["POST", "OPTIONS"])
 def ask_gemini():
     if request.method == 'OPTIONS':
