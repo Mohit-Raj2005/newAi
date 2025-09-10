@@ -13,7 +13,8 @@ CORS(app, origins=["*"])  # You can restrict this to your domain later
 
 # Get API key from environment
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+GEMINI_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={GEMINI_API_KEY}"
+
 
 @app.route('/')
 def index():
