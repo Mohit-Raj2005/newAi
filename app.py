@@ -10,13 +10,14 @@ load_dotenv()
 app = Flask(__name__)
 
 # Configure CORS
-CORS(app, resources={
-    r"/*": {
-        "origins": "https://dcoderaibuddy.vercel.app/",
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
-    }
-})
+# CORS(app, resources={
+#     r"/*": {
+#         "origins": "https://dcoderaibuddy.vercel.app/",
+#         "methods": ["GET", "POST", "OPTIONS"],
+#         "allow_headers": ["Content-Type", "Authorization"]
+#     }
+# })
+CORS(app)
 
 # Get API key from environment
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
